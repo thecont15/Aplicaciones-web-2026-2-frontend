@@ -1,0 +1,167 @@
+<section class="clientes">
+  <header class="crud-barra">
+    <div>
+      <h2>Clientes</h2>
+      <p>Administra los datos de contacto y el estado de cada cliente.</p>
+    </div>
+
+    <form class="filtro" (ngSubmit)="buscarPorId()">
+      <label for="idFiltro">Buscar por ID</label>
+      <input
+        id="idFiltro"
+        [(ngModel)]="idFiltro"
+        name="idFiltro"
+        type="number"
+        min="1"
+        placeholder="ID del cliente"
+      />
+      <button type="submit">Buscar</button>
+      <button type="button" class="boton-secundario" (click)="limpiarFiltro()">
+        Ver todos
+      </button>
+    </form>
+
+    <button type="button" class="boton-crear" (click)="abrirCrear()">
+      + Crear cliente
+    </button>
+  </header>
+
+  @if (mensaje()) {
+    <p class="mensaje" role="status">{{ mensaje() }}</p>
+  }
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Email</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (cliente of filas(); track cliente.id) {
+          <tr>
+            <td>{{ cliente.id }}</td>
+            <td>{{ cliente.nombre }}</td>
+            <td>{{ cliente.apellido }}</td>
+            <td>{{ cliente.email }}</td>
+            <td>{{ cliente.telefono || '—' }}</td>
+            <td>
+              <span
+                class="estado"
+                [class.estado-inactivo]="!cliente.activo"
+              >
+                {{ cliente.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="acciones">
+              <button type="button" (click)="abrirEditar(cliente)">Editar</button>
+              <button
+                type="button"
+                class="boton-eliminar"
+                (click)="eliminar(cliente)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="sin-resultados" colspan="7">No hay clientes para mostrar.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+@if (popupAbierto()) {
+  <div class="fondo-popup" (click)="cerrarPopup()">
+    <section
+      class="popup"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-formulario"
+      (click)="$event.stopPropagation()"
+    >
+      <h3 id="titulo-formulario">
+        {{ modo() === 'crear' ? 'Crear cliente' : 'Editar cliente' }}
+      </h3>
+
+      @if (errorPopup()) {
+        <p class="mensaje" role="alert">{{ errorPopup() }}</p>
+      }
+
+      <form #clienteForm="ngForm" (ngSubmit)="guardar()">
+        <label for="nombre">Nombre</label>
+        <input
+          id="nombre"
+          [(ngModel)]="formulario.nombre"
+          name="nombre"
+          type="text"
+          maxlength="100"
+          required
+        />
+
+        <label for="apellido">Apellido</label>
+        <input
+          id="apellido"
+          [(ngModel)]="formulario.apellido"
+          name="apellido"
+          type="text"
+          maxlength="100"
+          required
+        />
+
+        <label for="email">Email</label>
+        <input
+          id="email"
+          [(ngModel)]="formulario.email"
+          name="email"
+          type="email"
+          maxlength="255"
+          required
+        />
+
+        <label for="telefono">Teléfono <span>(opcional)</span></label>
+        <input
+          id="telefono"
+          [(ngModel)]="formulario.telefono"
+          name="telefono"
+          type="tel"
+          maxlength="30"
+        />
+
+        <label class="campo-checkbox" for="activo">
+          <input
+            id="activo"
+            [(ngModel)]="formulario.activo"
+            name="activo"
+            type="checkbox"
+          />
+          Cliente activo
+        </label>
+
+        <div class="acciones-formulario">
+          <button type="submit" [disabled]="clienteForm.invalid || guardando()">
+            {{ guardando() ? 'Guardando…' : 'Guardar' }}
+          </button>
+          <button
+            type="button"
+            class="boton-secundario"
+            (click)="cerrarPopup()"
+            [disabled]="guardando()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
+
