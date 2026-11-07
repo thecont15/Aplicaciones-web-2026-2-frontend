@@ -1,0 +1,162 @@
+<section class="vendedores">
+  <header class="crud-barra">
+    <div>
+      <h2>Vendedores</h2>
+      <p>Administra los datos de contacto y el estado de cada vendedor.</p>
+    </div>
+
+    <form class="filtro" (ngSubmit)="buscarPorId()">
+      <label for="idFiltro">Buscar por ID</label>
+      <input
+        id="idFiltro"
+        [(ngModel)]="idFiltro"
+        name="idFiltro"
+        type="number"
+        min="1"
+        placeholder="ID del vendedor"
+      />
+      <button type="submit">Buscar</button>
+      <button type="button" class="boton-secundario" (click)="limpiarFiltro()">
+        Ver todos
+      </button>
+    </form>
+
+    <button type="button" class="boton-crear" (click)="abrirCrear()">
+      + Crear vendedor
+    </button>
+  </header>
+
+  @if (mensaje) {
+    <p class="mensaje" role="status">{{ mensaje }}</p>
+  }
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Email</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vendedor of filas; track vendedor.id) {
+          <tr>
+            <td>{{ vendedor.id }}</td>
+            <td>{{ vendedor.nombre }}</td>
+            <td>{{ vendedor.apellido }}</td>
+            <td>{{ vendedor.email }}</td>
+            <td>{{ vendedor.telefono || '—' }}</td>
+            <td>
+              <span
+                class="estado"
+                [class.estado-inactivo]="!vendedor.activo"
+              >
+                {{ vendedor.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="acciones">
+              <button type="button" (click)="abrirEditar(vendedor)">Editar</button>
+              <button
+                type="button"
+                class="boton-eliminar"
+                (click)="eliminar(vendedor)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="sin-resultados" colspan="7">No hay vendedores para mostrar.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+@if (popupAbierto) {
+  <div class="fondo-popup" (click)="cerrarPopup()">
+    <section
+      class="popup"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-formulario"
+      (click)="$event.stopPropagation()"
+    >
+      <h3 id="titulo-formulario">
+        {{ modo === 'crear' ? 'Crear vendedor' : 'Editar vendedor' }}
+      </h3>
+
+      <form #vendedorForm="ngForm" (ngSubmit)="guardar()">
+        <label for="nombre">Nombre</label>
+        <input
+          id="nombre"
+          [(ngModel)]="formulario.nombre"
+          name="nombre"
+          type="text"
+          maxlength="100"
+          required
+        />
+
+        <label for="apellido">Apellido</label>
+        <input
+          id="apellido"
+          [(ngModel)]="formulario.apellido"
+          name="apellido"
+          type="text"
+          maxlength="100"
+          required
+        />
+
+        <label for="email">Email</label>
+        <input
+          id="email"
+          [(ngModel)]="formulario.email"
+          name="email"
+          type="email"
+          maxlength="255"
+          required
+        />
+
+        <label for="telefono">Teléfono <span>(opcional)</span></label>
+        <input
+          id="telefono"
+          [(ngModel)]="formulario.telefono"
+          name="telefono"
+          type="tel"
+          maxlength="30"
+        />
+
+        <label class="campo-checkbox" for="activo">
+          <input
+            id="activo"
+            [(ngModel)]="formulario.activo"
+            name="activo"
+            type="checkbox"
+          />
+          Vendedor activo
+        </label>
+
+        <div class="acciones-formulario">
+          <button type="submit" [disabled]="vendedorForm.invalid || guardando">
+            {{ guardando ? 'Guardando…' : 'Guardar' }}
+          </button>
+          <button
+            type="button"
+            class="boton-secundario"
+            (click)="cerrarPopup()"
+            [disabled]="guardando"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
