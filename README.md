@@ -5,7 +5,7 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 ## Cómo ejecutar el frontend en local
 
 Frontend Angular (sidebar + CRUD por entidad) que consume la API del curso.
-Entidades: **Vendedores** y **Productos** (`/productos`: GET lista, GET por id,
+Entidades: **Vendedores**, **Productos** y **Clientes** (`/clientes`: GET lista, GET por id,
 POST, PUT y DELETE).
 
 **URL base del backend:** `http://127.0.0.1:8000`
