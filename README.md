@@ -37,7 +37,7 @@ POST, PUT y DELETE).
    npm start
    ```
 
-4. Abrir `http://localhost:4200/` y entrar a **Productos** en el menú lateral.
+4. Abrir `http://localhost:4200/` y navegar a la entidad deseada (**Clientes**, **Productos** o **Vendedores**) en el menú lateral.
 
 Si la API no está encendida, la pantalla muestra
 "No hubo conexión con el servidor" y no se muestran datos.
