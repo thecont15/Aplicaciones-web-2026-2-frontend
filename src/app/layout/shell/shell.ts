@@ -12,5 +12,8 @@ import {
   templateUrl: './shell.html',
 })
 export class Shell {
-  readonly menu = [{ ruta: '/vendedores', etiqueta: 'Vendedores' }];
+  readonly menu = [
+    { ruta: '/vendedores', etiqueta: 'Vendedores' },
+    { ruta: '/productos', etiqueta: 'Productos' },
+  ];
 }
