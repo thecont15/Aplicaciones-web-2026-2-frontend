@@ -2,19 +2,47 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.3.
 
-## Desarrollo
+## Cómo ejecutar el frontend en local
 
-Inicia primero la API en `http://127.0.0.1:8000`. Luego, desde esta carpeta,
-inicia Angular con:
+Frontend Angular (sidebar + CRUD por entidad) que consume la API del curso.
+Entidades: **Vendedores** y **Productos** (`/productos`: GET lista, GET por id,
+POST, PUT y DELETE).
 
-```bash
-npm start
-```
+**URL base del backend:** `http://127.0.0.1:8000`
+(se configura en un solo lugar: `src/environments/environment.ts`, campo `apiUrl`).
 
-Abre `http://localhost:4200/`. Angular reenvía las peticiones a `/vendedores`,
-`/clientes`, `/inventarios` y `/productos` mediante `proxy.conf.json`, evitando
-que el navegador bloquee las solicitudes por CORS. Si la API está en otra
-dirección, actualiza el destino del proxy y reinicia `npm start`.
+### Requisitos
+
+- Node.js 20 o superior y npm.
+- El backend del curso en marcha con CORS habilitado para `http://localhost:4200`
+  (repositorio [Aplicaciones-web-2026-2](https://github.com/thecont15/Aplicaciones-web-2026-2)).
+
+### Pasos
+
+1. Levantar el backend (en la carpeta del repositorio del backend):
+
+   ```bash
+   uvicorn src.main:app --host 127.0.0.1 --port 8000
+   ```
+
+2. Instalar dependencias del frontend (una sola vez, en esta carpeta):
+
+   ```bash
+   npm install
+   ```
+
+3. Iniciar Angular:
+
+   ```bash
+   npm start
+   ```
+
+4. Abrir `http://localhost:4200/` y entrar a **Productos** en el menú lateral.
+
+Si la API no está encendida, la pantalla muestra
+"No hubo conexión con el servidor" y no se muestran datos.
+Si el backend corre en otra dirección, cambia `apiUrl` en
+`src/environments/environment.ts` y reinicia `npm start`.
 
 ## Code scaffolding
 
