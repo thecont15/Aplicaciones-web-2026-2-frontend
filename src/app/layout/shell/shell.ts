@@ -15,6 +15,7 @@ export class Shell {
   readonly menu = [
     { ruta: '/vendedores', etiqueta: 'Vendedores' },
     { ruta: '/productos', etiqueta: 'Productos' },
+    { ruta: '/inventario', etiqueta: 'Inventario' },
     { ruta: '/clientes', etiqueta: 'Clientes' },
   ];
 }

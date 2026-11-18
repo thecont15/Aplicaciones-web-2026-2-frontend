@@ -1,0 +1,189 @@
+<section class="inventario">
+  <header class="crud-barra">
+    <div>
+      <h2>Inventario</h2>
+      <p>Administra productos, existencias y niveles mínimos de stock.</p>
+    </div>
+
+    <form class="filtro" (ngSubmit)="buscarPorId()">
+      <label for="idFiltro">Buscar por ID (UUID)</label>
+      <input
+        id="idFiltro"
+        [(ngModel)]="idFiltro"
+        name="idFiltro"
+        type="text"
+        placeholder="UUID del registro"
+      />
+      <button type="submit">Buscar</button>
+      <button type="button" class="boton-secundario" (click)="limpiarFiltro()">Ver todos</button>
+    </form>
+
+    <button type="button" class="boton-crear" (click)="abrirCrear()">+ Crear registro</button>
+  </header>
+
+  @if (mensaje()) {
+    <p class="mensaje" role="status">{{ mensaje() }}</p>
+  }
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">SKU</th>
+          <th scope="col">Producto</th>
+          <th scope="col">Categoría</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Stock mínimo</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (inventario of filas(); track inventario.id) {
+          <tr>
+            <td class="id">{{ inventario.id }}</td>
+            <td>{{ inventario.sku }}</td>
+            <td>
+              <strong>{{ inventario.nombre_producto }}</strong>
+              @if (inventario.descripcion) {
+                <small>{{ inventario.descripcion }}</small>
+              }
+            </td>
+            <td>{{ inventario.categoria || '—' }}</td>
+            <td>{{ inventario.precio | number: '1.2-2' }}</td>
+            <td>{{ inventario.cantidad }}</td>
+            <td>{{ inventario.stock_minimo }}</td>
+            <td>
+              <span class="estado" [class.estado-inactivo]="!inventario.activo">
+                {{ inventario.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="acciones">
+              <button type="button" (click)="abrirEditar(inventario)">Editar</button>
+              <button type="button" class="boton-eliminar" (click)="eliminar(inventario)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="sin-resultados" colspan="9">No hay registros de inventario para mostrar.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+@if (popupAbierto()) {
+  <div class="fondo-popup" (click)="cerrarPopup()">
+    <section
+      class="popup"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-formulario"
+      (click)="$event.stopPropagation()"
+    >
+      <h3 id="titulo-formulario">
+        {{ modo() === 'crear' ? 'Crear registro' : 'Editar registro' }} de inventario
+      </h3>
+
+      @if (errorPopup()) {
+        <p class="mensaje" role="alert">{{ errorPopup() }}</p>
+      }
+
+      <form #inventarioForm="ngForm" (ngSubmit)="guardar()">
+        <label for="sku">SKU</label>
+        <input
+          id="sku"
+          [(ngModel)]="formulario.sku"
+          name="sku"
+          type="text"
+          maxlength="50"
+          required
+        />
+
+        <label for="nombre_producto">Nombre del producto</label>
+        <input
+          id="nombre_producto"
+          [(ngModel)]="formulario.nombre_producto"
+          name="nombre_producto"
+          type="text"
+          maxlength="150"
+          required
+        />
+
+        <label for="descripcion">Descripción <span>(opcional)</span></label>
+        <textarea
+          id="descripcion"
+          [(ngModel)]="formulario.descripcion"
+          name="descripcion"
+          rows="3"
+        ></textarea>
+
+        <label for="categoria">Categoría <span>(opcional)</span></label>
+        <input
+          id="categoria"
+          [(ngModel)]="formulario.categoria"
+          name="categoria"
+          type="text"
+          maxlength="100"
+        />
+
+        <label for="precio">Precio</label>
+        <input
+          id="precio"
+          [(ngModel)]="formulario.precio"
+          name="precio"
+          type="number"
+          min="0"
+          step="0.01"
+          required
+        />
+
+        <label for="cantidad">Cantidad</label>
+        <input
+          id="cantidad"
+          [(ngModel)]="formulario.cantidad"
+          name="cantidad"
+          type="number"
+          min="0"
+          step="1"
+          required
+        />
+
+        <label for="stock_minimo">Stock mínimo</label>
+        <input
+          id="stock_minimo"
+          [(ngModel)]="formulario.stock_minimo"
+          name="stock_minimo"
+          type="number"
+          min="0"
+          step="1"
+          required
+        />
+
+        <label class="campo-checkbox" for="activo">
+          <input id="activo" [(ngModel)]="formulario.activo" name="activo" type="checkbox" />
+          Registro activo
+        </label>
+
+        <div class="acciones-formulario">
+          <button type="submit" [disabled]="inventarioForm.invalid || guardando()">
+            {{ guardando() ? 'Guardando…' : 'Guardar' }}
+          </button>
+          <button
+            type="button"
+            class="boton-secundario"
+            (click)="cerrarPopup()"
+            [disabled]="guardando()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
