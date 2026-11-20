@@ -2,47 +2,61 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.3.
 
+## Aplicación desplegada
+
+- **Frontend (Firebase Hosting):** https://aplicaciones-y-servicios-web26.web.app
+- **Backend (Render):** https://aplicaciones-web-2026-2-kcfi.onrender.com
+
+El backend gratuito de Render se duerme tras un rato sin uso: la primera
+petición puede tardar cerca de un minuto en responder.
+
+Cada merge a `main` compila el frontend y lo publica en Firebase Hosting
+(workflow `.github/workflows/firebase-hosting-merge.yml`).
+
 ## Cómo ejecutar el frontend en local
 
 Frontend Angular (sidebar + CRUD por entidad) que consume la API del curso.
-Entidades: **Vendedores**, **Productos** y **Clientes** (`/clientes`: GET lista, GET por id,
-POST, PUT y DELETE).
+Entidades: **Vendedores**, **Productos**, **Inventario** y **Clientes** (GET lista,
+GET por id, POST, PUT y DELETE).
 
-**URL base del backend:** `http://127.0.0.1:8000`
+**URL base del backend:** `https://aplicaciones-web-2026-2-kcfi.onrender.com`
 (se configura en un solo lugar: `src/environments/environment.ts`, campo `apiUrl`).
 
 ### Requisitos
 
 - Node.js 20 o superior y npm.
-- El backend del curso en marcha con CORS habilitado para `http://localhost:4200`
+- El backend del curso con CORS habilitado para `http://localhost:4200`
   (repositorio [Aplicaciones-web-2026-2](https://github.com/thecont15/Aplicaciones-web-2026-2)).
 
 ### Pasos
 
-1. Levantar el backend (en la carpeta del repositorio del backend):
-
-   ```bash
-   uvicorn src.main:app --host 127.0.0.1 --port 8000
-   ```
-
-2. Instalar dependencias del frontend (una sola vez, en esta carpeta):
+1. Instalar dependencias (una sola vez, en esta carpeta):
 
    ```bash
    npm install
    ```
 
-3. Iniciar Angular:
+2. Iniciar Angular:
 
    ```bash
    npm start
    ```
 
-4. Abrir `http://localhost:4200/` y entrar a **Productos** en el menú lateral.
+3. Abrir `http://localhost:4200/` y entrar a **Productos** en el menú lateral.
+
+Si prefieres usar un backend local, levántalo con
+`uvicorn src.main:app --host 127.0.0.1 --port 8000` y cambia `apiUrl` a
+`http://127.0.0.1:8000` en `src/environments/environment.ts`.
 
 Si la API no está encendida, la pantalla muestra
 "No hubo conexión con el servidor" y no se muestran datos.
-Si el backend corre en otra dirección, cambia `apiUrl` en
-`src/environments/environment.ts` y reinicia `npm start`.
+
+### Despliegue manual (opcional)
+
+```bash
+npm run build
+npx firebase-tools deploy --only hosting
+```
 
 ## Code scaffolding
 

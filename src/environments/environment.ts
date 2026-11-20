@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'http://127.0.0.1:8000',
+  apiUrl: 'https://aplicaciones-web-2026-2-kcfi.onrender.com',
 };
